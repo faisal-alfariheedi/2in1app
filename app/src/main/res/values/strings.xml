@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">2in1app</string>
+    <string name="preference_guess_key">com.example.a2in1app.guessgame.PREFERENCE_FILE_KEY</string>
+    <string name="preference_number_key">com.example.a2in1app.numbergame.PREFERENCE_FILE_KEY</string>
+</resources>
