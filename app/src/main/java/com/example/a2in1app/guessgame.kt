@@ -32,6 +32,7 @@ class guessgame : AppCompatActivity() {
     var con:Boolean =true
     var old:String = ""
     var score = 0
+    var win=0
     lateinit var sc:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +54,7 @@ class guessgame : AppCompatActivity() {
             putInt("myMessage", score)
             apply()
         }
+        if(win==1)showAlertDialog("congrats do you want to play again", 1)
 
         add.setOnClickListener {
             if (!human_is_idiot()) {
@@ -62,8 +64,8 @@ class guessgame : AppCompatActivity() {
                         if (limitp > 0) {
                             if (inin.text.toString() == prq) {
                                 input.add("your guess is correct")
-                                showAlertDialog("congrats do you want to play again", 1)
-                                score++
+                                win=1
+                                score=score+ limitl
                                 sc.text=score.toString()
                             } else {
                                 input.add("wrong guess: ${inin.text}")
@@ -77,10 +79,8 @@ class guessgame : AppCompatActivity() {
                     false -> {
                         if (limitl > 0) {
                             if (inin.text.toString().count() == 1) {
-                                if (old.contains(inin.text.toString())) showAlertDialog(
-                                    "don`t guess old answer idiot",
-                                    0
-                                )
+                                if (old.contains(inin.text.toString())) showAlertDialog("don`t guess old answer idiot", 0)
+                                if (inin.text.toString().isEmpty())showAlertDialog("it can`t be empty", 0)
                                 else {
                                     var i = lettercheck(prq, inin.text.toString())
                                     if (i.isNotEmpty()) {
@@ -91,8 +91,17 @@ class guessgame : AppCompatActivity() {
                                         old += old + inin.text.toString()
                                         inin.hint = "Guess the full phrase"
                                         con = !con
+                                        bot.text="guessed latter : ${inin.text}"
 
-                                    } else showAlertDialog("it can`t be empty", 0)
+                                    } else {
+                                        input.add("wrong letter")
+                                        limitl--
+                                        input.add("$limitl guesses remaining")
+                                        old += old + inin.text.toString()
+                                        inin.hint = "Guess the full phrase"
+                                        con = !con
+
+                                    }
                                 }
                             } else showAlertDialog("one letter only", 0)
                             inin.text.clear()
@@ -100,10 +109,12 @@ class guessgame : AppCompatActivity() {
                         }
                     }
                 }
+                sc.text="your score is: $score"
+
                 if (limitl == 0 && limitp == 0) showAlertDialog("you lost", 1)
                 if (!stared.contains("*")) {
                     score++
-                    sc.text=score.toString()
+                    sc.text="your score is: $score"
                     input.add("you win")
                 }
 
